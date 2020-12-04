@@ -42,5 +42,7 @@ No output files created.
 
 # Works Cited
 Chess Piece Icons: https://commons.wikimedia.org/wiki/Category:PNG_chess_pieces/Standard_transparent.
+
 Chess General Information, Rules: https://en.wikipedia.org/wiki/Chess
+
 Python install: [https://www.python.org/downloads/](https://www.python.org/downloads/)
