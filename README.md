@@ -37,6 +37,9 @@ To run the program, having Python and the library pygame is needed. If you don't
 Python install: https://www.python.org/downloads/ (recommended to install latest version of Python)
 Pygame install: run "pip install pygame" in terminal after installing Python.
 
+# Input Files
+No input files necessary.
+
 # Output Files
 No output files created.
 
