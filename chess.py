@@ -1,4 +1,4 @@
-path = 'c:/Users/keno.deary/Desktop/chess/'
+path = ''
 
 import pygame
 import time
@@ -6,7 +6,7 @@ import chess_Engine
 
 pygame.init()
 
-#Define Global Constants
+# Define Global Constants #####################################################
 target_fps = 240
 width = 448
 height = 448
@@ -20,6 +20,7 @@ game_Display = pygame.display.set_mode((window_width, window_height))
 icons = {}
 small_icons = {}
 sounds = {}
+
 
 font_type = 'cambria'
 font = pygame.font.SysFont(font_type, 20)
@@ -35,6 +36,10 @@ col_num = ['8', '7', '6', '5', '4', '3', '2', '1']
 rank_let = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 pieces = ['wP', 'wR', 'wN', 'wB', 'wQ', 'wK', 'bP', 'bR', 'bN', 'bB', 'bQ', 'bK']
 
+#################################################################################
+
+
+#Load Images from Icons Folder
 def load_Images():
     for piece in pieces:
         icons[piece] = pygame.transform.scale(pygame.image.load(path + 'icons/' + piece + '.png'), (sq_size, sq_size))
@@ -42,10 +47,14 @@ def load_Images():
     for piece in pieces:
         small_icons[piece] = pygame.transform.scale(pygame.image.load(path + 'icons/' + piece + '.png'), (sq_size // 2, sq_size // 2))
 
+
+#Load Sounds from Sounds Folder
 def load_Sounds():
     sounds["move_piece"] = pygame.mixer.Sound(path + 'sounds/sound.wav')
     sounds["winner!"] = pygame.mixer.Sound(path + 'sounds/winner!.wav')
 
+
+#Draw Pieces on Board
 def draw_Pieces(screen, board):
     for i in range(board_dimensions):
         for j in range(board_dimensions):
@@ -53,10 +62,10 @@ def draw_Pieces(screen, board):
             if piece != '..':
                 game_Display.blit(icons[piece], pygame.Rect(j*sq_size + boardX, i*sq_size + boardY, sq_size, sq_size))
 
-#Create Chess Board
-def draw_Board(black_ticks_Left, white_ticks_Left):
 
-    # Draws all Titles/Headers/Words on Screen #######################################################################
+#Create Chess Board, Titles/Headers
+def draw_Board(black_ticks_Left, white_ticks_Left):
+    # Draws all Titles/Headers/Words on Screen ################################################################
     black_title = font.render("Black", 1, dark)
     white_title = font.render("White", 1, light)
     black_timer_title = font.render("Time Left:   " + seconds_To_MMSS(black_ticks_Left / target_fps), 1, dark)
@@ -83,8 +92,7 @@ def draw_Board(black_ticks_Left, white_ticks_Left):
         game_Display.blit(rank_letters, (boardX + half_sq_size + count, boardY + height))
         count = count + sq_size
 
-    #############################################################################################################
-
+    ############################################################################################################
 
     colors = [light, dark]
     # Draws the Board
@@ -95,6 +103,7 @@ def draw_Board(black_ticks_Left, white_ticks_Left):
     pygame.draw.rect(game_Display, dark, [boardX, boardY, board_dimensions*sq_size, board_dimensions*sq_size], 3)
 
 
+# Highlights Valid Moves for player
 def move_Assist(game_Display, gs, check_Moves, square_chosen):
     if square_chosen != ():
         row = square_chosen[0]
@@ -111,6 +120,7 @@ def move_Assist(game_Display, gs, check_Moves, square_chosen):
                     game_Display.blit(highlight, ((move.end_Col * sq_size) + boardX, (move.end_Row * sq_size) + boardY))
 
 
+# Attributes for game_Over Text ##############################
 def player_Win(game_Display, text, winning_color):
     game_Over_Text = font3.render(text, 1, winning_color)
     game_Display.blit(game_Over_Text, (100, (height//2) + 25))
@@ -123,12 +133,17 @@ def replay_Text(game_Display, text, winning_color):
     game_Over_Text = font3.render(text, 1, winning_color)
     game_Display.blit(game_Over_Text, (160, (height//2) + 65))
 
+##############################################################
+
+
+# Calls draw_Board, move_Assist, draw_Pieces all in one consolidated location
 def draw_GameState(game_Display, gs, check_Moves, square_chosen):
     draw_Board(gs.black_ticks_Left, gs.white_ticks_Left)
     move_Assist(game_Display, gs, check_Moves, square_chosen)
     draw_Pieces(game_Display, gs.board)
 
 
+# Displays Icon of Pieces Captured by Opponent
 def pieces_Captured(gs, white_captured, black_captured):
     white_x = 1
     black_x = 1
@@ -152,6 +167,7 @@ def pieces_Captured(gs, white_captured, black_captured):
         black_x += 1
 
 
+# Displays Checkmate/Stalemate game_Over Text and Plays 'winner!' Music.
 def checkmate_stalemate(gs, game_Over):
     if gs.checkmate:
         game_Over = True
@@ -171,6 +187,7 @@ def checkmate_stalemate(gs, game_Over):
         replay_Text(game_Display, 'Press \'R\' to replay.', grey)
 
 
+# Controls Player Timers and Displays Timeout game_Over Text upon player timeout.
 def player_Countdown(gs, game_Over):
     if gs.timeout:
         game_Over = True
@@ -197,9 +214,11 @@ def player_Countdown(gs, game_Over):
             gs.timeout = True
 
 
+# Converts to Minutes:Seconds Format
 def seconds_To_MMSS(seconds):
     minutes = seconds // 60
     return "%02d:%02d" % (minutes % 60, seconds % 60)
+
 
 
 def main():
@@ -213,6 +232,7 @@ def main():
     move_Made = False
     game_Over = False
 
+    # Number of minutes for each player
     user_input = int(input('How much minutes for each side? Enter an integer: '))
     timeLeft = target_fps * (user_input * 60)
 
@@ -248,8 +268,8 @@ def main():
                                 sounds["move_piece"].play()
                                 gs.make_Move(check_Moves[count])
                                 move_Made = True
-                                square_chosen = () #re-initalize player clicks
-                                player_Clicks = [] #re-initalize player clicks
+                                square_chosen = () #re-initialize player clicks
+                                player_Clicks = [] #re-initialize player clicks
                         
                         if not move_Made:
                             player_Clicks = [square_chosen]
@@ -275,16 +295,18 @@ def main():
 
             move_Made = False
 
-        # Limits to 60 fps  ################################################################
-        curr_time = time.time() # Time after processing
+        # Limits to 60 fps  ###################
+        curr_time = time.time()
         diff = curr_time - prev_time 
         delay = max(1.0 / target_fps - diff, 0)
         time.sleep(delay)
         fps = 1.0 / (delay + diff) 
         prev_time = curr_time
-        ####################################################################################
+
+        #######################################
 
         draw_GameState(game_Display, gs, check_Moves, square_chosen)
+
         if not game_Over:
             pieces_Captured(gs, gs.black_captured, gs.white_captured)
             checkmate_stalemate(gs, game_Over)

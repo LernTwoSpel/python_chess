@@ -13,6 +13,7 @@ class GameState():
         P = Pawn
         '''
 
+        # Initialize  Board
         self.board = [
             ['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
             ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP'],
@@ -24,10 +25,10 @@ class GameState():
             ['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR']]
 
 
-        self.white_Move = True
+        self.white_Move = True # Initialize white first move
         self.move_Log = []
-        self.white_King = (7,4) #initalize king location to determine check/checkmate
-        self.black_King = (0,4) #initalize king location to determine check/checkmate
+        self.white_King = (7,4) # Initialize king location to determine check/checkmate
+        self.black_King = (0,4) # Initialize king location to determine check/checkmate
         self.checkmate = False
         self.stalemate = False
         self.timeout = False
@@ -39,7 +40,7 @@ class GameState():
         self.white_captured = []
     
 
-    ### Makes move ###
+    # Makes Move
     def make_Move(self, move):
         self.board[move.start_Row][move.start_Col] = '..'
         self.board[move.end_Row][move.end_Col] = move.piece_Moved
@@ -62,7 +63,7 @@ class GameState():
             self.board[move.end_Row][move.end_Col] = move.piece_Moved[0] + 'Q'
         
 
-    ### Undo last move ###
+    # Undo Last Move
     def undo_Move(self):
         if len(self.move_Log) != 0:
             move = self.move_Log.pop()
@@ -84,7 +85,7 @@ class GameState():
                         self.black_captured.remove(move.piece_Captured)
 
 
-    # Possible moves when player is checked
+    # All possible moves when player is checked
     def check_Moves(self):
         moves = self.possible_Moves()
         for i in range(len(moves)-1,-1,-1):
@@ -113,7 +114,7 @@ class GameState():
             return self.under_Attack(self.black_King[0], self.black_King[1])
 
 
-    # Determines if player is attacking given row and col. This will help with recognizing check/checkmate.
+    # Determines if player is attacking given row and col. Helps with recognizing check/checkmate.
     def under_Attack(self, row, col):
         self.white_Move = not self.white_Move
         opponent_Moves = self.possible_Moves()
@@ -124,7 +125,7 @@ class GameState():
         return False
 
 
-    ### Determines possible move for every piece on board ###
+    # Determines possible move for every piece on board
     def possible_Moves(self):
         possible_moves = [] #Total set of all potential moves
         for row in range(len(self.board)):
@@ -149,7 +150,7 @@ class GameState():
 
     '''
     Piece Movement
-    Cite: Use of directions (i.e.: ((1,1), (-1,1), (-1,-1), (1,-1)) ) taken from YT video.
+    Cite: Use of directions (i.e.: ((1,1), (-1,1), (-1,-1), (1,-1)) ) idea received from YouTube video.
     '''
     def king_Moves(self, row, col, possible_moves):
         directions = (1,0), (-1,0), (0,1), (0,-1), (1,1), (-1,1), (-1,-1), (0,-1)
@@ -264,7 +265,7 @@ class GameState():
 
 class Move():
     '''
-    Got ranks_to_rows / files_to_cols from YT video
+    Cite: ranks_to_rows & files_to_cols received from YouTube video.
     '''
     ranks_to_rows = {'1': 7, '2': 6, '3': 5, '4': 4, '5': 3, '6': 2, '7': 1, '8': 0}
     rows_to_ranks = {7: '1', 6: '2', 5: '3', 4: '4', 3: '5', 2: '6', 1: '7', 0: '8'}
@@ -288,7 +289,7 @@ class Move():
 
 
     '''
-    Got def __eq__ idea from YT video
+    Cite: def __eq__ idea received from YouTube video.
     '''
     def __eq__(self, other):
         if isinstance(other, Move):
